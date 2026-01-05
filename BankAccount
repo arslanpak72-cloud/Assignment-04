@@ -1,0 +1,80 @@
+#include <iostream>
+#include <string>
+using namespace std;
+
+class BankAccount {
+private:
+    string name;
+    double balance;
+
+public:
+    // Constructor: called when object is created
+    BankAccount(string n, double b) {
+        cout << "Constructor called for account creation" << endl;
+
+        // Check for invalid initial balance
+        if (b < 0) {
+            throw runtime_error("Invalid account creation: Initial balance cannot be negative.");
+        }
+
+        name = n;
+        balance = b;
+        cout << "Account created successfully for " << name << endl;
+    }
+
+    // Function to withdraw money
+    void withdraw(double amount) {
+        cout << "Attempting withdrawal of " << amount << endl;
+
+        // Check if balance is sufficient
+        if (amount > balance) {
+            throw runtime_error("Withdrawal failed: Insufficient balance.");
+        }
+
+        balance -= amount;
+        cout << "Withdrawal successful. Remaining balance: " << balance << endl;
+    }
+
+    // Destructor: called when object is destroyed
+    ~BankAccount() {
+        cout << "Destructor called. Cleaning up account of " << name << endl;
+    }
+};
+
+int main() {
+    BankAccount* acc = nullptr;   // Pointer for dynamic object
+
+    try {
+        // Create object dynamically using new
+        acc = new BankAccount("Alice", 500);
+
+        // Valid withdrawal
+        acc->withdraw(200);
+
+        // Invalid withdrawal (will throw exception)
+        acc->withdraw(400);
+    }
+    catch (const exception& e) {
+        // Catch and display error message
+        cout << "Exception caught in main(): " << e.what() << endl;
+    }
+
+    // Delete object to avoid memory leak
+    delete acc;
+
+    cout << "Program continues normally after exception handling." << endl;
+
+    cout << "\nTrying to create account with negative balance:\n" << endl;
+
+    try {
+        // Constructor will throw exception
+        BankAccount* badAcc = new BankAccount("Bob", -100);
+        delete badAcc;   // Will not execute because exception occurs
+    }
+    catch (const exception& e) {
+        // Catch constructor exception
+        cout << "Exception caught in main(): " << e.what() << endl;
+    }
+
+    return 0;
+}

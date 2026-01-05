@@ -1,0 +1,32 @@
+#include <iostream>
+#include "BankAccount.h"
+using namespace std;
+
+int main() {
+    BankAccount* acc = nullptr;
+
+    try {
+        acc = new BankAccount("Alice", 500);
+        acc->withdraw(200);
+        acc->withdraw(400);   // Exception here
+    }
+    catch (const char* msg) {
+        cout << "Exception caught in main(): " << msg << endl;
+    }
+
+    delete acc;
+
+    cout << "Program continues normally after exception handling." << endl;
+
+    cout << "\nTrying to create account with negative balance:\n" << endl;
+
+    try {
+        BankAccount* badAcc = new BankAccount("Bob", -100);
+        delete badAcc;
+    }
+    catch (const char* msg) {
+        cout << "Exception caught in main(): " << msg << endl;
+    }
+
+    return 0;
+}
